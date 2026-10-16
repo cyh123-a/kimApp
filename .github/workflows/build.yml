@@ -40,6 +40,10 @@ jobs:
           curl -L -o tools.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
           unzip -q tools.zip
           mv cmdline-tools latest
+          # 关键：老版路径软链接，buildozer 只认 tools/bin/sdkmanager
+          mkdir -p $SDK/tools/bin
+          ln -sf $SDK/cmdline-tools/latest/bin/sdkmanager $SDK/tools/bin/sdkmanager
+          ln -sf $SDK/cmdline-tools/latest/bin/avdmanager $SDK/tools/bin/avdmanager 2>/dev/null || true
           cd $SDK
           yes | ./cmdline-tools/latest/bin/sdkmanager --licenses || true
           ./cmdline-tools/latest/bin/sdkmanager \
