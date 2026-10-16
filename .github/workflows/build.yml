@@ -29,6 +29,23 @@ jobs:
           pip install --upgrade pip
           pip install buildozer cython==0.29.36
 
+      # 关键步骤：预装 Android SDK 并静默接受许可证
+      - name: Pre-install Android SDK and accept licenses
+        run: |
+          SDK=$HOME/.buildozer/android/platform/android-sdk
+          mkdir -p $SDK/cmdline-tools
+          cd $SDK/cmdline-tools
+          curl -L -o tools.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+          unzip -q tools.zip
+          mv cmdline-tools latest
+          cd $SDK
+          yes | ./cmdline-tools/latest/bin/sdkmanager --licenses || true
+          ./cmdline-tools/latest/bin/sdkmanager \
+            "platforms;android-33" \
+            "build-tools;33.0.2" \
+            "platform-tools"
+          yes | ./cmdline-tools/latest/bin/sdkmanager --licenses || true
+
       - name: Build APK
         run: |
           export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
