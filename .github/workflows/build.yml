@@ -29,9 +29,11 @@ jobs:
           pip install --upgrade pip
           pip install buildozer cython==0.29.36
 
-      # 关键步骤：预装 Android SDK 并静默接受许可证
+      # 预装 Android SDK 并静默接受许可证（需 Java 17）
       - name: Pre-install Android SDK and accept licenses
         run: |
+          export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+          export PATH=$JAVA_HOME/bin:$PATH
           SDK=$HOME/.buildozer/android/platform/android-sdk
           mkdir -p $SDK/cmdline-tools
           cd $SDK/cmdline-tools
